@@ -5,16 +5,18 @@ from fastapi.exceptions import RequestValidationError
 
 from app.core.config import get_app_settings
 from app.core.events import create_start_app_handler
-from app.core.errors.validation_error import validation_exception_handler
+from app.api.errors.validation_error import validation_exception_handler
+
+from app.api.routes.auth import router
 
 
 def get_application() -> FastAPI:
+
     settings = get_app_settings()
 
     settings.configure_logging()
 
     application = FastAPI(**settings.fastapi_kwargs)
-
     application.add_middleware(
         CORSMiddleware,
         allow_origins=settings.allowed_hosts,
@@ -27,9 +29,8 @@ def get_application() -> FastAPI:
         "startup",
         create_start_app_handler(application, settings),
     )
-
+    application.include_router(router)
     application.add_exception_handler(RequestValidationError, validation_exception_handler)
-
     return application
 
 

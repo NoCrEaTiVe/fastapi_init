@@ -21,3 +21,9 @@ passlib[bcrypt]==1.7.4
 python-jose[cryptography]==3.3.0
 fastapi-cache2[redis]==0.1.8
 loguru
+motor==2.3.0
+mypy-extensions==0.4.3
+pathspec==0.8.1
+pycodestyle==2.6.0
+pyflakes==2.2.0
+pymongo==3.11.1

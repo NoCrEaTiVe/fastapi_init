@@ -1,0 +1,55 @@
+version: "3.7"
+
+services:
+  db_auth:
+    image: postgres:12.4
+    restart: always
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresqlauth/data/
+    environment:
+      - POSTGRES_HOST=db_auth
+      - POSTGRES_DB=dbauth
+      - POSTGRES_USER=root
+      - POSTGRES_PASSWORD=LOYAg3Wv
+    networks:
+      - auth_network
+#  db_auth:
+#    image: mongo:latest
+#    environment:
+#      MONGO_INITDB_ROOT_USERNAME: root
+#      MONGO_INITDB_ROOT_PASSWORD: example
+#      MONGO_INITDB_USERNAME: root
+#      MONGO_INITDB_PASSWORD: example
+#      MONGO_INITDB_DATABASE: sanadbauth
+#    ports:
+#      - 27017:27017
+#    volumes:
+#      - ./InitApp/mongo_start.js:/docker-entrypoint-initdb.d/mongo-init.js:ro
+#      - mongodb-data:/data/db
+#    networks:
+#      - lognet
+
+  auth-service:
+    build: AuthService
+    restart: always
+    ports:
+      - "5500:5500"
+    depends_on:
+      - db_auth
+    networks:
+      - auth_network
+      - redis_network
+
+volumes:
+  postgres_data:
+  static_value:
+  media_value:
+networks:
+  redis_network:
+    driver: bridge
+    external: true
+    name: redis_network
+  auth_network:
+    driver: bridge
